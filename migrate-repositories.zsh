@@ -18,7 +18,7 @@ function normalize-authors () {
 		fi;
 		if  [[ $GIT_AUTHOR_EMAIL =~ dand* ]]; then
 			GIT_AUTHOR_NAME="Dan Dennison";
-			GIT_AUTHOR_EMAIL="dand@thedennisons.org";
+			GIT_AUTHOR_EMAIL="dan@thedennisons.org";
 		fi;
 		GIT_COMMITTER_NAME="Caleb Maclennan";
 		GIT_COMMITTER_EMAIL="caleb@alerque.com";
