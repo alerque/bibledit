@@ -110,16 +110,16 @@ function trim_to_path() {
 
 function remove_paths() {
 	needed=false
-	for dir in ${(z)1}; do
+	for dir in ${(z)@}; do
 		[[ -a $dir ]] && needed=true ||:
 	done
 	$needed && git filter-branch -f --tag-name-filter cat --prune-empty --index-filter "
-		git rm -rf --cached --ignore-unmatch -- $1
+		git rm -rf --cached --ignore-unmatch -- $@
 	"
 }
 
 function remove_dead() {
-	git rm -rf -- $1 && commit "Remove dead code paths" ||:
+	git rm -rf -- $@ && commit "Remove dead code paths" ||:
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
@@ -134,9 +134,9 @@ normalize-authors
 popd
 
 init_repo bibledit orig-bibledit master
-remove_paths 'lib osx chromeos ios android windows linux'
-remove_paths 'bibletime bibleworks gtk onlinebible paratext web xiphos'
-remove_dead 'test'
+remove_paths lib osx chromeos ios android windows linux
+remove_paths bibletime bibleworks gtk onlinebible paratext web xiphos
+remove_dead test
 common_cleanup
 popd
 
