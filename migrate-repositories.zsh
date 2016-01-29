@@ -39,11 +39,11 @@ function normalize-authors () {
 }
 
 function init_repo() {
-	name=$1
+	repo=$1
 	src=$2
 	branch=$3
-	[[ -d $name ]] || git clone --branch=$branch $src $name
-	pushd $name
+	[[ -d $repo ]] || git clone --single-branch --no-hardlinks --branch=$branch $src $repo
+	pushd $repo
 }
 
 function commit() {
@@ -56,7 +56,7 @@ function update_readme() {
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme
 		rename_path $old_readme README.md
 	fi
-	echo "\n\n### $name\n\nSee README in bibledit repo" >> README.md
+	echo "\n\n### $repo\n\nSee README in bibledit repo" >> README.md
 	commit README.md "Add repo details to README"
 }
 
@@ -71,55 +71,75 @@ function rename_path() {
 	commit "$CI_MSG Rename path $old→$new"
 }
 
-function common_cleanup() {
-	repo=$(basename $PWD)
+function update_remote() {
 	git remote -v | grep -q origin && git remote rm origin ||:
 	git remote add origin $REMOTE/${repo}.git
+}
+
+function add_core_submodule() {
+	if ! git submodule status $BE_CORE; then
+		git submodule add -- $TARGET/$BE_CORE $BE_CORE
+		git submodule init -- $BE_CORE
+		git config --file=.gitmodules submodule.$BE_CORE.url $REMOTE/${BE_CORE}.git
+		git config --file=.gitmodules submodule.$BE_CORE.branch master
+		git submodule sync
+		git submodule update --init --remote 
+		git add $BE_CORE .gitmodules
+		commit "Initialize $BE_CORE as a submodule"
+	fi
+	git status
+}
+
+function common_cleanup() {
+	update_remote
+	#add_core_submodule
 	update_readme
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
 pushd $TARGET
 
-init_repo $BE_CORE $BASE master
+init_repo orig-bibledit $BASE master
 normalize-authors
-common_cleanup
 popd
 
-init_repo bibledit-web $BASE savannah/bibledit-web
+init_repo orig-bibledit-web $BASE savannah/bibledit-web
 normalize-authors
+popd
+
+init_repo bibledit orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-osx $BE_CORE master
+init_repo $BE_CORE orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-chromeos $BE_CORE master
+init_repo bibledit-osx orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-ios $BE_CORE master
+init_repo bibledit-chromeos orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-android $BE_CORE master
+init_repo bibledit-ios orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-windows $BE_CORE master
+init_repo bibledit-android orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-linux $BE_CORE master
+init_repo bibledit-windows orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit-cloud $BE_CORE master
+init_repo bibledit-linux orig-bibledit master
 common_cleanup
 popd
 
-init_repo bibledit $BE_CORE master
+init_repo bibledit-cloud orig-bibledit master
 common_cleanup
 popd
 
