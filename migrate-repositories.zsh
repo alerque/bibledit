@@ -7,6 +7,7 @@ $DEBUG && set -x
 
 BASE=~/projects/bibledit
 TARGET=~/scratch/bibledit
+REMOTE=git@github.com:bibledit
 
 BE_CORE=bibledit-core
 CI_MSG="[Migrate repos]"
@@ -58,11 +59,18 @@ function rename_path() {
 	old=$1
 	new=$2
 	git grep -l "\b$old\b" | while read file; do
-		sed -i -e "s/\b$old\b/$new/g" $file
+	sed -i -e "s/\b$old\b(?!\.)/$new/g" $file
 		git add $file
 	done
 	git mv $old $new
 	git ci -m "$CI_MSG Rename path $old→$new"
+}
+
+function common_cleanup() {
+	repo=$(basename $PWD)
+	git remote -v | grep -q origin && git remote rm origin ||:
+	git remote add origin $REMOTE/${repo}.git
+	update_readme
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
@@ -70,44 +78,44 @@ pushd $TARGET
 
 init_repo $BE_CORE $BASE master
 normalize-authors
-update_readme
+common_cleanup
 popd
 
 init_repo bibledit-web $BASE savannah/bibledit-web
 normalize-authors
-update_readme
+common_cleanup
 popd
 
-init_repo bibledit-osx $BASE master
-update_readme
+init_repo bibledit-osx $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-chromeos $BASE master
-update_readme
+init_repo bibledit-chromeos $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-ios $BASE master
-update_readme
+init_repo bibledit-ios $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-android $BASE master
-update_readme
+init_repo bibledit-android $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-windows $BASE master
-update_readme
+init_repo bibledit-windows $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-linux $BASE master
-update_readme
+init_repo bibledit-linux $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit-cloud $BASE master
-update_readme
+init_repo bibledit-cloud $BE_CORE master
+common_cleanup
 popd
 
-init_repo bibledit $BASE master
-update_readme
+init_repo bibledit $BE_CORE master
+common_cleanup
 popd
 
 ls -al
