@@ -35,7 +35,6 @@ function normalize-authors () {
 			GIT_COMMITTER_EMAIL="$(git config user.email)";
 			git commit-tree "$@";
 		'
-	show-authors
 }
 
 function init_repo() {
@@ -56,6 +55,7 @@ function update_readme() {
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme
 		rename_path $old_readme README.md
 	fi
+	grep -q 'See README in bibledit' README.md && return
 	echo "\n\n### $repo\n\nSee README in bibledit repo" >> README.md
 	commit README.md "Add repo details to README"
 }
@@ -83,7 +83,7 @@ function add_core_submodule() {
 		git config --file=.gitmodules submodule.$BE_CORE.url $REMOTE/${BE_CORE}.git
 		git config --file=.gitmodules submodule.$BE_CORE.branch master
 		git submodule sync
-		git submodule update --init --remote 
+		git submodule update --init --remote
 		git add $BE_CORE .gitmodules
 		commit "Initialize $BE_CORE as a submodule"
 	fi
@@ -94,6 +94,16 @@ function common_cleanup() {
 	update_remote
 	#add_core_submodule
 	update_readme
+	echo "## $repo"
+	show-authors
+}
+
+function trim_to_path() {
+	keep=$1
+	[[ ! -d $keep ]] && return
+	git subtree split -P $keep -b tmp
+	git checkout tmp
+	git branch -M tmp master
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
@@ -112,35 +122,43 @@ common_cleanup
 popd
 
 init_repo $BE_CORE orig-bibledit master
+trim_to_path lib
 common_cleanup
 popd
 
 init_repo bibledit-osx orig-bibledit master
+trim_to_path osx
 common_cleanup
 popd
 
 init_repo bibledit-chromeos orig-bibledit master
+trim_to_path chromeos
 common_cleanup
 popd
 
 init_repo bibledit-ios orig-bibledit master
+trim_to_path ios
 common_cleanup
 popd
 
 init_repo bibledit-android orig-bibledit master
+trim_to_path android
 common_cleanup
 popd
 
 init_repo bibledit-windows orig-bibledit master
+trim_to_path windows
 common_cleanup
 popd
 
 init_repo bibledit-linux orig-bibledit master
+trim_to_path linux
 common_cleanup
 popd
 
 init_repo bibledit-cloud orig-bibledit master
+#trim_to_path
 common_cleanup
 popd
 
-ls -al
+echo "This too was meaningless."
