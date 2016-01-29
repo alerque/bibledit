@@ -113,9 +113,13 @@ function remove_paths() {
 	for dir in ${(z)1}; do
 		[[ -a $dir ]] && needed=true ||:
 	done
-	$needed && git filter-branch --tag-name-filter cat --prune-empty --index-filter "
+	$needed && git filter-branch -f --tag-name-filter cat --prune-empty --index-filter "
 		git rm -rf --cached --ignore-unmatch -- $1
 	"
+}
+
+function remove_dead() {
+	git rm -rf -- $1 && commit "Remove dead code paths" ||:
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
@@ -131,6 +135,8 @@ popd
 
 init_repo bibledit orig-bibledit master
 remove_paths 'lib osx chromeos ios android windows linux'
+remove_paths 'bibletime bibleworks gtk onlinebible paratext web xiphos'
+remove_dead 'test'
 common_cleanup
 popd
 
