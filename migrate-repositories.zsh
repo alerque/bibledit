@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 set -e
+#set -x
 
 BASE=~/projects/bibledit
 TARGET=~/scratch/bibledit
@@ -10,11 +11,14 @@ function show-authors() {
 }
 
 function normalize-authors () {
-	show-authors
 	git filter-branch -f --commit-filter '
 		if  [[ $GIT_AUTHOR_EMAIL =~ teus* ]] || [[ $GIT_AUTHOR_EMAIL =~ translation* ]]; then
 			GIT_AUTHOR_NAME="Teus Benschop";
 			GIT_AUTHOR_EMAIL="teusjannette@gmail.com";
+		fi;
+		if  [[ $GIT_AUTHOR_EMAIL =~ mattias* ]]; then
+			GIT_AUTHOR_NAME="Mattias Põldaru";
+			GIT_AUTHOR_EMAIL="mahfiaz@gmail.com";
 		fi;
 		if  [[ $GIT_AUTHOR_EMAIL =~ dand* ]]; then
 			GIT_AUTHOR_NAME="Dan Dennison";
@@ -24,15 +28,22 @@ function normalize-authors () {
 		GIT_COMMITTER_EMAIL="caleb@alerque.com";
 		git commit-tree "$@";
 	'
-	show-authors
 }
 
+#rm -rf $TARGET ; mkdir $TARGET
 pushd $TARGET
 
 [[ -d bibledit-core ]] || git clone --branch=master $BASE bibledit-core
 pushd bibledit-core
-normalize-authors
+show-authors | grep -q Compaq && normalize-authors
+show-authors
 git log -1
+popd
+
+[[ -d bibledit-web ]] || git clone --branch=savannah/bibledit-web $BASE bibledit-web
+pushd bibledit-web
+show-authors | grep -q jurak && normalize-authors
+show-authors
 popd
 
 ls -al
