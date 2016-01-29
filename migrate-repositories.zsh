@@ -48,12 +48,13 @@ function init_repo() {
 function commit() {
 	[[ -n $2 ]] && git add $1
 	git ci -m "$CI_MSG $2"
+	git --no-pager show
 }
 
 function update_readme() {
 	if [[ ! -f README.md ]]; then
-		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme
-		rename_path $old_readme README.md
+		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme ||:
+		[[ -f $old_readme ]] && rename_path $old_readme README.md || touch README.md
 	fi
 	grep -q 'See README in bibledit' README.md && return
 	echo "\n\n### $repo\n\nSee README in bibledit repo" >> README.md
@@ -92,9 +93,10 @@ function add_core_submodule() {
 
 function common_cleanup() {
 	update_remote
-	#add_core_submodule
+	add_core_submodule
 	update_readme
 	echo "## $repo"
+	git gc --aggressive --prune=all
 	show-authors
 }
 
@@ -104,6 +106,16 @@ function trim_to_path() {
 	git subtree split -P $keep -b tmp
 	git checkout tmp
 	git branch -M tmp master
+}
+
+function remove_paths() {
+	needed=false
+	for dir in ${(z)1}; do
+		[[ -a $dir ]] && needed=true ||:
+	done
+	$needed && git filter-branch --tag-name-filter cat --prune-empty --index-filter "
+		git rm -rf --cached --ignore-unmatch -- $1
+	"
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
@@ -118,6 +130,7 @@ normalize-authors
 popd
 
 init_repo bibledit orig-bibledit master
+remove_paths 'lib osx chromeos ios android windows linux'
 common_cleanup
 popd
 
