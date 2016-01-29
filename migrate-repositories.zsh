@@ -6,6 +6,9 @@ set -e
 BASE=~/projects/bibledit
 TARGET=~/scratch/bibledit
 
+
+BE_CORE=bibledit-core
+
 function show-authors() {
 	git log --format='%an <%ae>' | sort | uniq -c | sort -n
 }
@@ -35,8 +38,8 @@ function normalize-authors () {
 #rm -rf $TARGET ; mkdir $TARGET
 pushd $TARGET
 
-[[ -d bibledit-core ]] || git clone --branch=master $BASE bibledit-core
-pushd bibledit-core
+[[ -d $BE_CORE ]] || git clone --branch=master $BASE $BE_CORE
+pushd $BE_CORE
 normalize-authors
 git log -1
 popd
@@ -44,6 +47,34 @@ popd
 [[ -d bibledit-web ]] || git clone --branch=savannah/bibledit-web $BASE bibledit-web
 pushd bibledit-web
 normalize-authors
+popd
+
+[[ -d bibledit-osx ]] || git clone --branch=master $BE_CORE bibledit-osx
+pushd bibledit-osx
+popd
+
+[[ -d bibledit-ios ]] || git clone --branch=master $BE_CORE bibledit-ios
+pushd bibledit-ios
+popd
+
+[[ -d bibledit-android ]] || git clone --branch=master $BE_CORE bibledit-android
+pushd bibledit-android
+popd
+
+[[ -d bibledit-windows ]] || git clone --branch=master $BE_CORE bibledit-windows
+pushd bibledit-windows
+popd
+
+[[ -d bibledit-linux ]] || git clone --branch=master $BE_CORE bibledit-linux
+pushd bibledit-linux
+popd
+
+[[ -d bibledit-cloud ]] || git clone --branch=master $BE_CORE bibledit-cloud
+pushd bibledit-cloud
+popd
+
+[[ -d bibledit ]] || git clone --branch=master $BE_CORE bibledit
+pushd bibledit
 popd
 
 ls -al
