@@ -1,13 +1,15 @@
 #!/usr/bin/env zsh
 
 set -e
-#set -x
+
+: ${DEBUG:=false}
+$DEBUG && set -x
 
 BASE=~/projects/bibledit
 TARGET=~/scratch/bibledit
 
-
 BE_CORE=bibledit-core
+CI_MSG="[Migrate repos]"
 
 function show-authors() {
 	git log --format='%an <%ae>' | sort | uniq -c | sort -n
@@ -35,46 +37,77 @@ function normalize-authors () {
 	show-authors
 }
 
+function init_repo() {
+	name=$1
+	src=$2
+	branch=$3
+	[[ -d $name ]] || git clone --branch=$branch $src $name
+	pushd $name
+}
+
+function update_readme() {
+	if [[ ! -f README.md ]]; then
+		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme
+		rename_path $old_readme README.md
+	else
+		: cat README.md
+	fi
+}
+
+function rename_path() {
+	old=$1
+	new=$2
+	git grep -l "\b$old\b" | while read file; do
+		sed -i -e "s/\b$old\b/$new/g" $file
+		git add $file
+	done
+	git mv $old $new
+	git ci -m "$CI_MSG Rename path $old→$new"
+}
+
 #rm -rf $TARGET ; mkdir $TARGET
 pushd $TARGET
 
-[[ -d $BE_CORE ]] || git clone --branch=master $BASE $BE_CORE
-pushd $BE_CORE
+init_repo $BE_CORE $BASE master
 normalize-authors
-git log -1
+update_readme
 popd
 
-[[ -d bibledit-web ]] || git clone --branch=savannah/bibledit-web $BASE bibledit-web
-pushd bibledit-web
+init_repo bibledit-web $BASE savannah/bibledit-web
 normalize-authors
+update_readme
 popd
 
-[[ -d bibledit-osx ]] || git clone --branch=master $BE_CORE bibledit-osx
-pushd bibledit-osx
+init_repo bibledit-osx $BASE master
+update_readme
 popd
 
-[[ -d bibledit-ios ]] || git clone --branch=master $BE_CORE bibledit-ios
-pushd bibledit-ios
+init_repo bibledit-chromeos $BASE master
+update_readme
 popd
 
-[[ -d bibledit-android ]] || git clone --branch=master $BE_CORE bibledit-android
-pushd bibledit-android
+init_repo bibledit-ios $BASE master
+update_readme
 popd
 
-[[ -d bibledit-windows ]] || git clone --branch=master $BE_CORE bibledit-windows
-pushd bibledit-windows
+init_repo bibledit-android $BASE master
+update_readme
 popd
 
-[[ -d bibledit-linux ]] || git clone --branch=master $BE_CORE bibledit-linux
-pushd bibledit-linux
+init_repo bibledit-windows $BASE master
+update_readme
 popd
 
-[[ -d bibledit-cloud ]] || git clone --branch=master $BE_CORE bibledit-cloud
-pushd bibledit-cloud
+init_repo bibledit-linux $BASE master
+update_readme
 popd
 
-[[ -d bibledit ]] || git clone --branch=master $BE_CORE bibledit
-pushd bibledit
+init_repo bibledit-cloud $BASE master
+update_readme
+popd
+
+init_repo bibledit $BASE master
+update_readme
 popd
 
 ls -al
