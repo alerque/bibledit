@@ -46,13 +46,18 @@ function init_repo() {
 	pushd $name
 }
 
+function commit() {
+	[[ -n $2 ]] && git add $1
+	git ci -m "$CI_MSG $2"
+}
+
 function update_readme() {
 	if [[ ! -f README.md ]]; then
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme
 		rename_path $old_readme README.md
-	else
-		: cat README.md
 	fi
+	echo "\n\n### $name\n\nSee README in bibledit repo" >> README.md
+	commit README.md "Add repo details to README"
 }
 
 function rename_path() {
@@ -63,7 +68,7 @@ function rename_path() {
 		git add $file
 	done
 	git mv $old $new
-	git ci -m "$CI_MSG Rename path $old→$new"
+	commit "$CI_MSG Rename path $old→$new"
 }
 
 function common_cleanup() {
