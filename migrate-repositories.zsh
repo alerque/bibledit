@@ -70,6 +70,14 @@ function update_readme() {
 	commit README.md "Add repository details to README"
 }
 
+function update_license() {
+	[[ -f LICENSE ]] && return ||:
+	find -maxdepth 1 -type f -iname 'licen*' | head -n1 | cut -c3- | read old_license ||:
+	[[ -f $old_license ]] && rename_path $old_license LICENSE && commit LICENSE "Rename old license file" ||:
+	curl -s http://www.gnu.org/licenses/gpl-3.0.txt > LICENSE
+	commit LICENSE "Update license as GPLv3"
+}
+
 function rename_path() {
 	old=$1
 	new=$2
@@ -136,6 +144,7 @@ function common_cleanup() {
 	update_remote
 	add_core_submodule
 	update_readme
+	update_license
 	echo "## $repo"
 	git gc --aggressive --prune=all
 	show-authors
