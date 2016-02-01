@@ -113,11 +113,9 @@ function update_remote() {
 function add_core_submodule() {
 	if ! git submodule status $BE_CORE; then
 		git submodule add -- $TARGET/$BE_CORE $BE_CORE
-		git submodule init -- $BE_CORE
 		git config --file=.gitmodules submodule.$BE_CORE.url $REMOTE/${BE_CORE}.git
 		git config --file=.gitmodules submodule.$BE_CORE.branch master
 		git submodule sync
-		git submodule update --init --remote
 		git add $BE_CORE .gitmodules
 		commit "Initialize $BE_CORE as a submodule"
 	fi
