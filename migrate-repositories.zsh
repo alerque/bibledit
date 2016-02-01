@@ -86,6 +86,14 @@ function update_license() {
 	commit LICENSE "Update GPLv3 license"
 }
 
+function apply_patches() {
+	find $BASE/patches/$repo -type f |
+		sort -n |
+		while read patch; do
+			git am $patch || git am --skip
+		done
+}
+
 function rename_path() {
 	old=$1
 	new=$2
@@ -157,6 +165,7 @@ function common_cleanup() {
 	git gc --aggressive --prune=all
 	show_authors
 	add_editor_config
+	apply_patches
 }
 
 function trim_to_path() {
