@@ -91,6 +91,38 @@ function add_core_submodule() {
 	git status
 }
 
+function add_editor_config() {
+	[[ -f .editorconfig ]] && return ||:
+	cut -c1- > .editorconfig <<-EOF
+		# Cross-editor configuration
+		# @see http://editorconfig.org/
+		root = true
+
+		[*]
+		end_of_line = LF
+		charset = utf-8
+		trim_trailing_whitespace = true
+		insert_final_newline = true
+
+		[{Makefile}]
+		indent_style = tab
+		indent_size = 4
+
+		[*.{py,md}]
+		indent_style = space
+		indent_size = 4
+
+		[*.{xml,html,hbs,zsh}]
+		indent_style = tab
+		indent_size = 4
+
+		[*.{js,json,yml,css}]
+		indent_style = space
+		indent_size = 2
+	EOF
+	commit .editorconfig "Add project-wide editor configuration"
+}
+
 function common_cleanup() {
 	update_remote
 	add_core_submodule
@@ -98,6 +130,7 @@ function common_cleanup() {
 	echo "## $repo"
 	git gc --aggressive --prune=all
 	show-authors
+	add_editor_config
 }
 
 function trim_to_path() {
