@@ -46,9 +46,16 @@ function init_repo() {
 }
 
 function commit() {
-	[[ -n $2 ]] && git add $1
-	git ci -m "$CI_MSG $2"
-	git --no-pager show
+	while true; do
+		if [[ -a $1 ]]; then
+			git add $1
+			shift
+		else
+			break
+		fi
+	done
+	git ci -m "$CI_MSG $@"
+	git --no-pager show --stat
 }
 
 function update_readme() {
