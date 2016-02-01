@@ -160,7 +160,6 @@ function common_cleanup() {
 	update_readme
 	update_license
 	echo "## $repo"
-	git gc --aggressive --prune=all
 	show_authors
 	add_editor_config
 	apply_patches
