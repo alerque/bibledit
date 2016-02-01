@@ -12,12 +12,12 @@ REMOTE=git@github.com:bibledit
 BE_CORE=bibledit-core
 CI_MSG="[Migrate repos]"
 
-function show-authors() {
+function show_authors() {
 	git log --format='%an <%ae>' | sort | uniq -c | sort -n
 }
 
-function normalize-authors () {
-	show-authors | grep -qi Compaq && \
+function normalize_authors () {
+	show_authors | grep -qi Compaq && \
 		git filter-branch -f --commit-filter '
 			if  [[ $GIT_AUTHOR_EMAIL =~ teus* ]] || [[ $GIT_AUTHOR_EMAIL =~ translation* ]]; then
 				GIT_AUTHOR_NAME="Teus Benschop";
@@ -147,7 +147,7 @@ function common_cleanup() {
 	update_license
 	echo "## $repo"
 	git gc --aggressive --prune=all
-	show-authors
+	show_authors
 	add_editor_config
 }
 
@@ -177,11 +177,11 @@ function remove_dead() {
 pushd $TARGET
 
 init_repo orig-bibledit $BASE master
-normalize-authors
+normalize_authors
 popd
 
 init_repo orig-bibledit-web $BASE savannah/bibledit-web
-normalize-authors
+normalize_authors
 popd
 
 init_repo bibledit orig-bibledit master
