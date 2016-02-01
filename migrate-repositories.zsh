@@ -59,11 +59,12 @@ function commit() {
 }
 
 function update_readme() {
+	grep -q 'This repository houses' README.md && return ||:
 	if [[ ! -f README.md ]]; then
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme ||:
-		[[ -f $old_readme ]] && rename_path $old_readme README.md && echo >> README.md || touch README.md
+		[[ -f $old_readme ]] && rename_path $old_readme README.md ||:
 	fi
-	grep -q 'main bibledit repository' README.md && return ||:
+	[[ -f README.md ]] &&  echo >> README.md || touch README.md
 	cut -c1- >> README.md <<-EOF
 		# Bibledit ${(C)repo/*-} User Interface
 		
