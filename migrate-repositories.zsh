@@ -79,10 +79,10 @@ function update_readme() {
 
 function update_license() {
 	[[ -f LICENSE ]] && return ||:
-	find -maxdepth 1 -type f -iname 'licen*' | head -n1 | cut -c3- | read old_license ||:
-	[[ -f $old_license ]] && rename_path $old_license LICENSE && commit LICENSE "Rename old license file" ||:
+	find -maxdepth 1 -type f -iname 'licen*' -or -iname 'copying' | head -n1 | cut -c3- | read old_license ||:
+	[[ -f $old_license ]] && rename_path $old_license LICENSE ||:
 	curl -s http://www.gnu.org/licenses/gpl-3.0.txt > LICENSE
-	commit LICENSE "Update license as GPLv3"
+	commit LICENSE "Update GPLv3 license"
 }
 
 function rename_path() {
@@ -93,7 +93,7 @@ function rename_path() {
 		git add $file
 	done
 	git mv $old $new
-	commit "$CI_MSG Rename path $old→$new"
+	commit "Rename path $old→$new"
 }
 
 function update_remote() {
