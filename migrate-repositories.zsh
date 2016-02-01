@@ -56,8 +56,17 @@ function update_readme() {
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme ||:
 		[[ -f $old_readme ]] && rename_path $old_readme README.md && echo >> README.md || touch README.md
 	fi
-	grep -q 'main bibledit repository' README.md && return
-	echo "# Bibledit ${(C)repo/*-} User Interface\n\nThis repository houses the user interface wrapper for [Bibledit][be]. For more details please see the [README][berm] in the main bibledit repository.\n\n[be]: https://bibledit.org\n[berm]: https://github.com/bibledit/bibledit" >> README.md
+	grep -q 'main bibledit repository' README.md && return ||:
+	cut -c1- >> README.md <<-EOF
+		# Bibledit ${(C)repo/*-} User Interface
+		
+		This repository houses the user interface wrapper for [Bibledit][be].
+		For more details please see the [README][berm] in the main bibledit
+		repository.
+
+		[be]: https://bibledit.org
+		[berm]: https://github.com/bibledit/bibledit
+	EOF
 	commit README.md "Add repository details to README"
 }
 
