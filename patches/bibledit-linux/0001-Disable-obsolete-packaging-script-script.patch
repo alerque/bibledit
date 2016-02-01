@@ -1,0 +1,36 @@
+From 2810a4bd874d40fe08c264de99eaebd4955f0f99 Mon Sep 17 00:00:00 2001
+From: Caleb Maclennan <caleb@alerque.com>
+Date: Mon, 1 Feb 2016 18:00:21 +0200
+Subject: [PATCH] Disable obsolete packaging script
+
+---
+ README.md  | 2 --
+ tarball.sh | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/README.md b/README.md
+index ded2789..d653f5c 100644
+--- a/README.md
++++ b/README.md
+@@ -1,7 +1,5 @@
+ This folder contains Bibledit for Linux.
+ 
+-Run script ./tarball to create a tarball for compilation and execution on Linux.
+-
+ # Bibledit Linux User Interface
+ 
+ This repository houses the user interface wrapper for [Bibledit][be].
+diff --git a/tarball.sh b/tarball.sh
+index e12caea..07fdc52 100755
+--- a/tarball.sh
++++ b/tarball.sh
+@@ -1,4 +1,6 @@
+ #!/bin/bash
++echo "This script is obsolete"
++exit 1
+ 
+ 
+ # This script runs in a Terminal on OS X.
+-- 
+2.7.0
+

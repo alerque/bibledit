@@ -1,0 +1,98 @@
+From b0ffe6515861da0915c8215dcf1cebddc4dae63a Mon Sep 17 00:00:00 2001
+From: Caleb Maclennan <caleb@alerque.com>
+Date: Fri, 25 Mar 2016 11:01:39 +0200
+Subject: [PATCH] Add .md extention to README references
+
+---
+ INSTALL     | 6 +++---
+ Makefile.in | 2 +-
+ README.md   | 2 +-
+ missing     | 2 +-
+ reconfigure | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/INSTALL b/INSTALL
+index 2099840..fb76791 100644
+--- a/INSTALL
++++ b/INSTALL
+@@ -14,7 +14,7 @@ Basic Installation
+ 
+    Briefly, the shell command `./configure && make && make install'
+ should configure, build, and install this package.  The following
+-more-detailed instructions are generic; see the `README' file for
++more-detailed instructions are generic; see the `README.me' file for
+ instructions specific to this package.  Some packages provide this
+ `INSTALL' file but do not implement all of the features documented
+ below.  The lack of an optional feature in a given package is not
+@@ -38,7 +38,7 @@ cache files.
+ 
+    If you need to do unusual things to compile the package, please try
+ to figure out how `configure' could check whether to do them, and mail
+-diffs or instructions to the address given in the `README' so they can
++diffs or instructions to the address given in the `README.me' so they can
+ be considered for the next release.  If you are using the cache, and at
+ some point `config.cache' contains results you don't want to keep, you
+ may remove or edit it.
+@@ -200,7 +200,7 @@ option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+ `configure', where FEATURE indicates an optional part of the package.
+ They may also pay attention to `--with-PACKAGE' options, where PACKAGE
+ is something like `gnu-as' or `x' (for the X Window System).  The
+-`README' should mention any `--enable-' and `--with-' options that the
++`README.me' should mention any `--enable-' and `--with-' options that the
+ package recognizes.
+ 
+    For packages that use the X Window System, `configure' can usually
+diff --git a/Makefile.in b/Makefile.in
+index 6664a78..cf7791f 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -374,7 +374,7 @@ CTAGS = ctags
+ CSCOPE = cscope
+ AM_RECURSIVE_TARGETS = cscope
+ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
+-	COPYING ChangeLog INSTALL NEWS README compile config.guess \
++	COPYING ChangeLog INSTALL NEWS README.me compile config.guess \
+ 	config.sub depcomp install-sh missing
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+diff --git a/README.md b/README.md
+index 7ee212a..1b18411 100644
+--- a/README.md
++++ b/README.md
+@@ -2,7 +2,7 @@
+ # Bibledit Core User Interface
+ 
+ This repository houses the user interface wrapper for [Bibledit][be].
+-For more details please see the [README][berm] in the main bibledit
++For more details please see the [README.me][berm] in the main bibledit
+ repository.
+ 
+ [be]: https://bibledit.org
+diff --git a/missing b/missing
+index db98974..f64c4ee 100755
+--- a/missing
++++ b/missing
+@@ -191,7 +191,7 @@ give_advice ()
+       ;;
+     *)
+       echo "You might have modified some files without having the proper"
+-      echo "tools for further handling them.  Check the 'README' file, it"
++      echo "tools for further handling them.  Check the 'README.me' file, it"
+       echo "often tells you about the needed prerequisites for installing"
+       echo "this package.  You may also peek at any GNU archive site, in"
+       echo "case some other package contains this missing '$1' program."
+diff --git a/reconfigure b/reconfigure
+index c34a27f..4c10f92 100755
+--- a/reconfigure
++++ b/reconfigure
+@@ -1,6 +1,6 @@
+ aclocal
+ autoconf
+-touch AUTHORS NEWS README ChangeLog
++touch AUTHORS NEWS README.me ChangeLog
+ automake --add-missing
+ autoreconf
+ autoheader
+-- 
+2.7.4
+
