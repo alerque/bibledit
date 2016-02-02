@@ -187,11 +187,16 @@ function remove_dead() {
 	git rm -rf -- $@ && commit "Remove dead code paths" ||:
 }
 
+function strip_dead() {
+	git rm -rf -- $@ && commit "Remove dead code paths" ||:
+}
+
 #rm -rf $TARGET ; mkdir $TARGET
 pushd $TARGET
 
 init_repo orig-bibledit $BASE master
 normalize_authors
+remove_paths test
 popd
 
 init_repo orig-bibledit-web $BASE savannah/bibledit-web
@@ -201,7 +206,6 @@ popd
 init_repo bibledit orig-bibledit master
 remove_paths lib osx chromeos ios android windows linux
 remove_paths bibletime bibleworks gtk onlinebible paratext web xiphos
-remove_dead test
 common_cleanup
 popd
 
