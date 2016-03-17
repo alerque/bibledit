@@ -203,12 +203,6 @@ init_repo orig-bibledit-web $BASE savannah/bibledit-web
 normalize_authors
 popd
 
-init_repo bibledit orig-bibledit master
-remove_paths lib osx chromeos ios android windows linux
-remove_paths bibletime bibleworks gtk onlinebible paratext web xiphos
-common_cleanup
-popd
-
 init_repo $BE_CORE orig-bibledit master
 trim_to_path lib
 common_cleanup
@@ -246,6 +240,12 @@ popd
 
 init_repo bibledit-cloud orig-bibledit master
 #trim_to_path
+common_cleanup
+popd
+
+init_repo bibledit orig-bibledit master
+remove_paths lib osx chromeos ios android windows linux
+remove_paths bibletime bibleworks gtk onlinebible paratext web xiphos
 common_cleanup
 popd
 
