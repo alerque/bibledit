@@ -174,13 +174,13 @@ function trim_to_path() {
 }
 
 function remove_paths() {
+	dirs=(${(z)@})
 	needed=false
-	for dir in ${(z)@}; do
+	for dir in $dirs; do
 		[[ -a $dir ]] && needed=true ||:
 	done
-	$needed && git filter-branch -f --tag-name-filter cat --prune-empty --index-filter "
-		git rm -rf --cached --ignore-unmatch -- $@
-	"
+	$needed && git filter-branch -f --tag-name-filter cat --prune-empty \
+		--index-filter "git rm -rf --cached --ignore-unmatch -- $dirs"
 }
 
 function remove_dead() {
