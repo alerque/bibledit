@@ -88,7 +88,7 @@ function update_license() {
 
 function apply_patches() {
 	find $BASE/patches/$repo -type f |
-		sort -n |
+		sort -V |
 		while read patch; do
 			git am $patch || git am --skip
 		done
@@ -119,7 +119,6 @@ function add_core_submodule() {
 		git add $BE_CORE .gitmodules
 		commit "Initialize $BE_CORE as a submodule"
 	fi
-	git status
 }
 
 function add_editor_config() {
