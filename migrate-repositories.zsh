@@ -240,7 +240,7 @@ common_cleanup
 popd
 
 init_repo bibledit-cloud orig-bibledit master
-#trim_to_path
+trim_to_path web
 common_cleanup
 popd
 
