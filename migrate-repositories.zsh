@@ -156,6 +156,7 @@ function add_editor_config() {
 function common_cleanup() {
 	update_remote
 	add_core_submodule
+	lfs_filter
 	update_readme
 	update_license
 	echo "## $repo"
@@ -164,6 +165,45 @@ function common_cleanup() {
 	apply_patches
 	git gc --aggressive --prune=now ||:
 	git fsck
+}
+
+function lfs_filter () {
+	test -f .gitattributes && return ||:
+	if [[ ! -f allfileshas.txt ]]; then
+		git rev-list --objects --all |
+			sort -k 2 > allfileshas.txt
+	fi
+	if [[ ! -f bigobjects.txt ]]; then
+		git gc ||:
+		git verify-pack -v .git/objects/pack/pack-*.idx |
+			egrep "^\w+ blob\W+[0-9]+ [0-9]+ [0-9]+$" |
+			sort -k 3 -n -r > bigobjects.txt
+	fi
+	if [[ ! -f bigtosmall.txt ]]; then
+		while read sha x; do
+			echo $(grep $sha bigobjects.txt) $(grep $sha allfileshas.txt) |
+				awk '{print $1,$3,$7}'
+		done < bigobjects.txt > bigtosmall.txt
+	fi
+	while read sha size file; do
+		[[ $size -le 500000 ]] && continue
+		[[ -f $file ]] && continue
+		echo $file
+	done < bigtosmall.txt |
+		pcregrep -v '\.(php|in|h|c)$' > /tmp/stashables.txt
+	git filter-branch --prune-empty --tree-filter '
+		while read file; do
+			test -f ${file} && git lfs track ${file}
+		done < /tmp/stashables.txt
+		git add .gitattributes 2>/dev/null
+		for file in $(git ls-files |
+			xargs git check-attr filter 2>/dev/null |
+			grep "filter: lfs" |
+			sed -r "s/(.*): filter: lfs/\1/"); do
+				git rm -f --cached ${file}
+				git add ${file}
+		done' --tag-name-filter cat -- --all
+	cp /tmp/stashables.txt ./
 }
 
 function trim_to_path() {
