@@ -168,7 +168,11 @@ function common_cleanup() {
 }
 
 function lfs_filter () {
-	test -f .gitattributes && return ||:
+	if [[ $(cat .gitattributes | grep -v '^#' | grep -v text=auto | grep -v '^$') == '' ]]; then
+		remove_defunct .gitattributes
+	else
+		return
+	fi
 	if [[ ! -f allfileshas.txt ]]; then
 		git rev-list --objects --all |
 			sort -k 2 > allfileshas.txt
@@ -186,11 +190,12 @@ function lfs_filter () {
 		done < bigobjects.txt > bigtosmall.txt
 	fi
 	while read sha size file; do
-		[[ $size -le 500000 ]] && continue
-		[[ -f $file ]] && continue
+		[[ $size -le 500000 ]] && continue ||:
+		[[ -f $file ]] && continue ||:
 		echo $file
 	done < bigtosmall.txt |
-		pcregrep -v '\.(php|in|h|c)$' > /tmp/stashables.txt
+		pcregrep -v '\.(php|in|h|c)$' |
+		pcregrep -v '^$' > /tmp/stashables.txt
 	git filter-branch --prune-empty --tree-filter '
 		while read file; do
 			test -f ${file} && git lfs track ${file}
@@ -224,12 +229,8 @@ function remove_paths() {
 		--index-filter "git rm -rf --cached --ignore-unmatch -- $dirs"
 }
 
-function remove_dead() {
-	git rm -rf -- $@ && commit "Remove dead code paths" ||:
-}
-
-function strip_dead() {
-	git rm -rf -- $@ && commit "Remove dead code paths" ||:
+function remove_defunct() {
+	git rm -rf -- $@ && commit "Remove defunct $@" ||:
 }
 
 #rm -rf $TARGET ; mkdir $TARGET
