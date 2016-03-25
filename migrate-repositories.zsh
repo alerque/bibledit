@@ -163,6 +163,7 @@ function common_cleanup() {
 	add_editor_config
 	apply_patches
 	git gc --aggressive --prune=now ||:
+	git fsck
 }
 
 function trim_to_path() {
