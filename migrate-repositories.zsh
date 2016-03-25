@@ -162,6 +162,7 @@ function common_cleanup() {
 	show_authors
 	add_editor_config
 	apply_patches
+	git gc --aggressive --prune=now ||:
 }
 
 function trim_to_path() {
