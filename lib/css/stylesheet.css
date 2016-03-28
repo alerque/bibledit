@@ -304,15 +304,61 @@ span[contenteditable=true],
 .focusedverse {
   background: lightyellow;
 }
-.clearfix {
-  clear: both;
+nav ul {
+  clear: left;
 }
-nav a {
+nav ul.loc {
+  float: right;
+  clear: right;
+}
+nav li {
+  display: block;
+  float: left;
+}
+nav li a:link,
+nav li a:visited,
+nav li a {
+  display: inline-block;
+  padding: 0.2em 0.3em 0 0.3em;
   color: #000;
 }
-nav.basic,
-nav.advanced {
-  padding: 0.3em;
+nav li a:active {
+  background: green;
+}
+nav li a:hover {
+  background: yellow;
+  text-decoration: none;
+}
+nav ul {
+  clear: left;
+}
+nav ul.loc {
+  float: right;
+  clear: right;
+}
+nav li {
+  display: block;
+  float: left;
+}
+nav li a:link,
+nav li a:visited,
+nav li a {
+  display: inline-block;
+  padding: 0.1em 0.3em;
+  color: #000;
+}
+nav li a:active {
+  background: green;
+}
+nav li a:hover {
+  background: yellow;
+  text-decoration: none;
+}
+nav.advanced li {
+  border-right: 1px solid #BBB;
+}
+nav.advanced ul.loc li {
+  border-left: 1px solid #BBB;
 }
 nav.basic a {
   padding: 0 0.4em;
@@ -322,14 +368,7 @@ nav.basic a {
      -moz-appearance: button;
           appearance: button;
 }
-nav.advanced span {
-  margin-right: 0.2em;
-}
-nav.advanced span.nowrap + span:before {
-  margin-right: 0.4em;
-  color: #CCC;
-  content: "|";
-}
+nav li,
 .nowrap {
   white-space: nowrap;
 }

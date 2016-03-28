@@ -1,22 +1,24 @@
 <!-- #BEGINZONE display_topbar -->
 <nav class="##basicadvanced##">
-<!-- #BEGINZONE bare_browser -->
-<span id="backbutton"><a href="back" title="translate ("Go back")">◀</a></span>
-<!-- #ENDZONE bare_browser -->
-<!-- #BEGINZONE start_button -->
-<span><a href="/index/index?item=main" title="##starttooltip##">translate("Menu")</a></span>
-<!-- #ENDZONE start_button -->
-<!-- #BEGINZONE fading_menu -->
-<span class="fadeout">##fadingmenu##</span>
-<script type="text/javascript">var fadingMenuDelay = ##fadingmenudelay##;</script>
-<!-- #ENDZONE fading_menu -->
-##mainmenu##
-<!-- #BEGINZONE display_navigator -->
-<span id="versepickerwrapper"></span>
-<script type="text/javascript" src="/navigation/passage.js?##VERSION##"></script>
-<script type="text/javascript">var displayNavigator = true;</script>
-##navigation_code##
-<!-- #ENDZONE display_navigator -->
-##usermenu##
+  <ul class="loc">
+    <!-- #BEGINZONE bare_browser -->
+    <li id="backbutton"><a href="back" title="translate ("Go back")">◀</a></li>
+    <!-- #ENDZONE bare_browser -->
+    <!-- #BEGINZONE display_navigator -->
+    <li id="versepickerwrapper"></li>
+    <script type="text/javascript" src="/navigation/passage.js?##VERSION##"></script>
+    <script type="text/javascript">var displayNavigator = true;</script>
+    ##navigation_code##
+    <!-- #ENDZONE display_navigator -->
+  </ul>
+  <ul>
+    ##mainmenu##
+  </ul>
+  <!-- #BEGINZONE fading_menu -->
+  <ul class="fadeout">
+    ##fadingmenu##
+  </ul>
+  <script type="text/javascript">var fadingMenuDelay = ##fadingmenudelay##;</script>
+  <!-- #ENDZONE fading_menu -->
 </nav>
 <!-- #ENDZONE display_topbar -->

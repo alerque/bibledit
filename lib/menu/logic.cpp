@@ -114,7 +114,7 @@ string menu_logic_click (string item)
 string menu_logic_create_item (string href, string text, bool history, string title)
 {
   string item;
-  item.append ("<span class=\"nowrap\">");
+  item.append ("<li>");
   item.append ("<a href=\"/");
   if (history) {
     item.append (menu_index_url ());
@@ -123,7 +123,7 @@ string menu_logic_create_item (string href, string text, bool history, string ti
   }
   item.append ("?item=");
   item.append (menu_logic_href (href) + "\" title=\"" + title + "\">" + text + "</a>");
-  item.append ("</span>");
+  item.append ("</li>");
   return item;
 }
 

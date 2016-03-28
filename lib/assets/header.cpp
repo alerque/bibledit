@@ -191,9 +191,6 @@ string Assets_Header::run ()
       view->disable_zone ("bare_browser");
     }
     
-    // The start button to be displayed only when there's no menu.
-    bool start_button = true;
-    
     string menublock;
     string item = request->query ["item"];
     bool main_menu_always_on = false;
@@ -207,7 +204,6 @@ string Assets_Header::run ()
         string devnull;
         menublock = menu_logic_main_categories (webserver_request, devnull);
       }
-      start_button = false;
     } else if (item == menu_logic_translate_menu ()) {
       menublock = menu_logic_translate_category (webserver_request);
     } else if (item == menu_logic_search_menu ()) {
@@ -225,13 +221,6 @@ string Assets_Header::run ()
     }
     view->set_variable ("mainmenu", menublock);
 
-    if (start_button) {
-      view->enable_zone ("start_button");
-      string tooltip;
-      menu_logic_main_categories (webserver_request, tooltip);
-      view->set_variable ("starttooltip", tooltip);
-    }
-    
     if (!fadingmenu.empty ()) {
       view->enable_zone ("fading_menu");
       view->set_variable ("fadingmenu", fadingmenu);
