@@ -59,17 +59,16 @@ string Navigation_Passage::getNavigator (void * webserver_request, string bible)
   // Links to go back and forward are available only when there's available history to go to.
   // In basic mode they are not there.
   if (!basic_mode) {
-    fragment.append ("<span>");
+    fragment.append ("<li>");
     if (database_navigation.previousExists (user)) {
       fragment.append ("<a id=\"navigateback\" href=\"navigateback\" title=\"" + translate("Back") + "\">↶</a>");
     }
-    fragment.append ("</span>");
-    fragment.append ("<span>");
-    fragment.append (" ");
+    fragment.append ("</li>");
+    fragment.append ("<li>");
     if (database_navigation.nextExists (user)) {
       fragment.append ("<a id=\"navigateforward\" href=\"navigateforward\" title=\"" + translate("Forward") + "\">↷</a>");
     }
-    fragment.append ("</span>");
+    fragment.append ("</li>");
     fragment.append ("\n");
   }
   
@@ -88,7 +87,7 @@ string Navigation_Passage::getNavigator (void * webserver_request, string bible)
   string bookName = Database_Books::getEnglishFromId (book);
   bookName = translate (bookName);
 
-  fragment.append ("<span><a id=\"selectbook\" href=\"selectbook\" title=\"" + translate ("Select book") + "\">" + bookName + "</a></span>");
+  fragment.append ("<li><a id=\"selectbook\" href=\"selectbook\" title=\"" + translate ("Select book") + "\">" + bookName + "</a></li>");
   
   int chapter = Ipc_Focus::getChapter (request);
   
@@ -102,7 +101,7 @@ string Navigation_Passage::getNavigator (void * webserver_request, string bible)
     }
   }
 
-  fragment.append ("<span><a id=\"selectchapter\" href=\"selectchapter\" title=\"" + translate ("Select chapter") + "\"> " + convert_to_string (chapter) +  " </a></span>");
+  fragment.append ("<li><a id=\"selectchapter\" href=\"selectchapter\" title=\"" + translate ("Select chapter") + "\"> " + convert_to_string (chapter) +  " </a></li>");
   
   int verse = Ipc_Focus::getVerse (request);
   
@@ -124,7 +123,7 @@ string Navigation_Passage::getNavigator (void * webserver_request, string bible)
     }
   }
   
-  fragment.append ("<span><a");
+  fragment.append ("<li><a");
   if (!basic_mode) {
     fragment.append (" class=\"previousverse\"");
   }
@@ -132,18 +131,18 @@ string Navigation_Passage::getNavigator (void * webserver_request, string bible)
     // A previous verse (0) is assumed to be available.
     fragment.append (" id=\"previousverse\" href=\"previousverse\" title=\"" + translate ("Go to previous verse") + "\"");
   }
-  fragment.append ("> « </a></span>");
+  fragment.append (">«</a></li>");
   
-  fragment.append ("<span><a");
+  fragment.append ("<li><a");
   if (!basic_mode) fragment.append (" class=\"selectverse\"");
-  fragment.append (" id=\"selectverse\" href=\"selectverse\" title=\"" + translate ("Select verse") + "\"> " + convert_to_string (verse) +  " </a></span>");
+  fragment.append (" id=\"selectverse\" href=\"selectverse\" title=\"" + translate ("Select verse") + "\"> " + convert_to_string (verse) +  " </a></li>");
 
-  fragment.append ("<span><a");
+  fragment.append ("<li><a");
   if (!basic_mode) fragment.append (" class=\"nextverse\"");
   if (next_verse_is_available) {
     fragment.append (" id=\"nextverse\" href=\"nextverse\" title=\"" + translate ("Go to next verse") + "\"");
   }
-  fragment.append ("> » </a></span>");
+  fragment.append (">»</a></li>");
 
   // Store book / chapter / verse if they were clipped.
   if (passage_clipped) {
