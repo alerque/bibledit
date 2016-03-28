@@ -193,7 +193,7 @@ h6,
 #name1,
 #name2,
 #name3,
-#topbar,
+nav,
 #editorinnerheader {
   font-family: sans-serif;
 }
@@ -307,7 +307,7 @@ span[contenteditable=true],
 .clearfix {
   clear: both;
 }
-#topbar a {
+nav a {
   color: #000;
 }
 #breadcrumbs:not(:empty) {
@@ -315,11 +315,11 @@ span[contenteditable=true],
   padding: 0.2em 0;
   border-top: 1px dotted #CCC;
 }
-.menu-basic,
-.menu-advanced {
+nav.basic,
+nav.advanced {
   padding: 0.3em;
 }
-.menu-basic a {
+nav.basic a {
   padding: 0 0.4em;
   border-style: solid;
   text-decoration: none!important;
@@ -327,10 +327,10 @@ span[contenteditable=true],
      -moz-appearance: button;
           appearance: button;
 }
-.menu-advanced span {
+nav.advanced span {
   margin-right: 0.2em;
 }
-.menu-advanced span.nowrap + span:before {
+nav.advanced span.nowrap + span:before {
   margin-right: 0.4em;
   color: #CCC;
   content: "|";
@@ -362,7 +362,7 @@ span[contenteditable=true],
     width: 100% !important;
     height: inherit !important;
   }
-  #topbar {
+  nav {
     display: none;
   }
 }
