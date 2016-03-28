@@ -369,10 +369,6 @@ string menu_logic_translate_category (void * webserver_request, string * tooltip
   }
 #endif
   
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_translate_text () + ": ");
-  }
-
   if (tooltip) tooltip->assign (filter_string_implode (labels, " | "));
   return filter_string_implode (html, "\n");
 }
@@ -435,10 +431,6 @@ string menu_logic_search_category (void * webserver_request, string * tooltip)
     string label = translate ("Search Bible for similar Hebrew or Greek words");
     html.push_back (menu_logic_create_item (search_originals_url (), label, true));
     labels.push_back (label);
-  }
-  
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_search_text () + ": ");
   }
   
   if (tooltip) tooltip->assign (filter_string_implode (labels, " | "));
@@ -567,10 +559,6 @@ string menu_logic_tools_category (void * webserver_request, string * tooltip)
       }
     }
     
-  }
-  
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_tools_text () + ": ");
   }
   
   if (tooltip) tooltip->assign (filter_string_implode (tiplabels, " | "));
@@ -872,10 +860,6 @@ string menu_logic_settings_resources_category (void * webserver_request)
   }
 #endif
   
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_resources_text () + ": ");
-  }
-  
   return filter_string_implode (html, "\n");
 }
 
@@ -892,10 +876,6 @@ string menu_logic_settings_styles_category (void * webserver_request)
     html.push_back (menu_logic_create_item (styles_indexm_url (), menu_logic_styles_indexm_text (), true));
   }
   
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_styles_text () + ": ");
-  }
-  
   return filter_string_implode (html, "\n");
 }
 
@@ -910,10 +890,6 @@ string menu_logic_help_category (void * webserver_request)
     html.push_back (menu_logic_create_item ("help/index", translate ("Help and About"), true));
   }
 
-  if (!html.empty ()) {
-    html.insert (html.begin (), menu_logic_help_text () + ": ");
-  }
-  
   return filter_string_implode (html, "\n");
 }
 
