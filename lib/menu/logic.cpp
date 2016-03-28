@@ -845,11 +845,6 @@ string menu_logic_settings_category (void * webserver_request, string * tooltip)
     
   }
   
-  if (!html.empty ()) {
-    string user = request->session_logic ()->currentUser ();
-    html.insert (html.begin (), menu_logic_settings_text () + " (" + user + "): ");
-  }
-  
   if (tooltip) tooltip->assign (filter_string_implode (tiplabels, " | "));
   return filter_string_implode (html, "\n");
 }
