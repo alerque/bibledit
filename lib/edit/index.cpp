@@ -78,7 +78,6 @@ string edit_index (void * webserver_request)
   header.setEditorStylesheet ();
   if (touch) header.jQueryMobileTouchOn ();
   header.notifItOn ();
-  header.addBreadCrumb (menu_logic_translate_menu (), menu_logic_translate_text ());
   page = header.run ();
   
   

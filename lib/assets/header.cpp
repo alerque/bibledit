@@ -126,14 +126,6 @@ void Assets_Header::setFadingMenu (string html)
   fadingmenu = html;
 }
 
-
-// Add one breadcrumb $item with $text.
-void Assets_Header::addBreadCrumb (string item, string text)
-{
-  breadcrumbs.push_back (make_pair (item, text));
-}
-
-
 // Runs the header.
 string Assets_Header::run ()
 {
@@ -284,34 +276,6 @@ string Assets_Header::run ()
   }
   if (!embedded_css.empty ()) {
     view->set_variable ("embedded_css", filter_string_implode (embedded_css, "\n"));
-  }
-  
-  if (request->database_config_user ()->getDisplayBreadcrumbs ()) {
-    if (!breadcrumbs.empty ()) {
-      // No bread crumbs in basic mode.
-      // The crumbs would be incorrect anyway, because they show the trail of advanced mode.
-      if (!config_logic_basic_mode (webserver_request)) {
-        string track;
-        track.append ("<a href=\"/");
-        track.append (index_index_url ());
-        track.append ("\">");
-        track.append (menu_logic_menu_text (""));
-        track.append ("</a>");
-        for (auto & crumb : breadcrumbs) {
-          track.append (" » ");
-          if (!crumb.first.empty ()) {
-            track.append ("<a href=\"/");
-            track.append (menu_logic_menu_url (crumb.first));
-            track.append ("\">");
-          }
-          track.append (crumb.second);
-          if (!crumb.first.empty ()) {
-            track.append ("</a>");
-          }
-        }
-        view->set_variable ("breadcrumbs", track);
-      }
-    }
   }
   
   page += view->render("assets", "xhtml_start");

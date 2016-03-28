@@ -79,7 +79,6 @@ string workbench_organize (void * webserver_request)
   
   Assets_Header header = Assets_Header (translate("Workbenches"), request);
   header.jQueryUIOn ();
-  header.addBreadCrumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   page = header.run ();
   
   

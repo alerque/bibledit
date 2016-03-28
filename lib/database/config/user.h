@@ -199,8 +199,6 @@ public:
   string getRequestedGDefinition ();
   void setVerticalCaretPosition (int position);
   int getVerticalCaretPosition ();
-  bool getDisplayBreadcrumbs ();
-  void setDisplayBreadcrumbs (bool value);
   void setDesktopMenuFadeoutDelay (int value);
   int getDesktopMenuFadeoutDelay ();
   int getEditingAllowedDifferenceChapter ();

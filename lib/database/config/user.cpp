@@ -1090,16 +1090,6 @@ void Database_Config_User::setVerticalCaretPosition (int position)
 }
 
 
-bool Database_Config_User::getDisplayBreadcrumbs ()
-{
-  return getBValue ("display-breadcrumbs", false);
-}
-void Database_Config_User::setDisplayBreadcrumbs (bool value)
-{
-  setBValue ("display-breadcrumbs", value);
-}
-
-
 int Database_Config_User::getDesktopMenuFadeoutDelay ()
 {
   return getIValue ("desktop-menu-fadeout-delay", 4);

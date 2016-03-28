@@ -310,11 +310,6 @@ span[contenteditable=true],
 nav a {
   color: #000;
 }
-#breadcrumbs:not(:empty) {
-  margin: 0.2em 0;
-  padding: 0.2em 0;
-  border-top: 1px dotted #CCC;
-}
 nav.basic,
 nav.advanced {
   padding: 0.3em;

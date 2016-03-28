@@ -51,8 +51,6 @@ string bible_abbreviations (void * webserver_request)
   string page;
   
   Assets_Header header = Assets_Header (translate("Abbreviations"), webserver_request);
-  header.addBreadCrumb (menu_logic_settings_menu (), menu_logic_settings_text ());
-  header.addBreadCrumb (bible_manage_url (), menu_logic_bible_manage_text ());
   page = header.run ();
   
   Assets_View view;

@@ -193,7 +193,6 @@ string search_search2 (void * webserver_request)
   string page;
   Assets_Header header = Assets_Header (translate("Search"), request);
   header.setNavigator ();
-  header.addBreadCrumb (menu_logic_search_menu (), menu_logic_search_text ());
   page = header.run ();
   Assets_View view;
   view.set_variable ("bible", bible);

@@ -54,8 +54,6 @@ string bible_import (void * webserver_request)
   
   Assets_Header header = Assets_Header (translate("Import"), webserver_request);
   header.setNavigator ();
-  header.addBreadCrumb (menu_logic_settings_menu (), menu_logic_settings_text ());
-  header.addBreadCrumb (bible_manage_url (), menu_logic_bible_manage_text ());
   page = header.run ();
   
   Assets_View view;

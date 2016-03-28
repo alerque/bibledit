@@ -319,7 +319,6 @@ void Styles_Css::add_exports_styles ()
   code.push_back ("a:visited { color: #5a3696; }");
   code.push_back ("a:active { color: #faa700; }");
   code.push_back ("a:hover { text-decoration: underline; }");
-  code.push_back (".breadcrumbs { font-size: normal; }");
   code.push_back (".navigationbar { font-size: normal; }");
 }
 

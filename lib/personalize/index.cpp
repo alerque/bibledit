@@ -67,14 +67,6 @@ string personalize_index (void * webserver_request)
     return "";
   }
   
-
-  // Breadcrumbs: Before displaying the page, so the page does the correct thing with the bread crumbs.
-  if (request->query.count ("breadcrumbs")) {
-    bool state = request->database_config_user ()->getDisplayBreadcrumbs ();
-    request->database_config_user ()->setDisplayBreadcrumbs (!state);
-  }
-  
-  
   // Main menu always visible: Before displaying page, so the page does the correct thing with the menu.
   if (request->query.count ("menuvisible")) {
     bool state = request->database_config_user ()->getMainMenuAlwaysVisible ();
@@ -108,7 +100,6 @@ string personalize_index (void * webserver_request)
   
   
   Assets_Header header = Assets_Header (translate("Personalize"), webserver_request);
-  header.addBreadCrumb (menu_logic_settings_menu (), menu_logic_settings_text ());
   header.jQueryUIOn ();
   page = header.run ();
 
@@ -219,12 +210,6 @@ string personalize_index (void * webserver_request)
   }
   view.set_variable ("caretposition", convert_to_string (request->database_config_user ()->getVerticalCaretPosition ()));
   
-
-  // Whether to display bread crumbs.
-  string on_off = styles_logic_off_on_inherit_toggle_text (request->database_config_user ()->getDisplayBreadcrumbs ());
-  view.set_variable ("breadcrumbs", on_off);
-
-  
   // Desktop menu fade out delay.
   if (request->query.count ("desktopfadeoutdelay")) {
     Dialog_Entry dialog_entry = Dialog_Entry ("index", translate("Please enter a fade out delay between 1 and 100 seconds or 0 to disable"), convert_to_string (request->database_config_user ()->getDesktopMenuFadeoutDelay ()), "desktopfadeoutdelay", "");
@@ -248,7 +233,7 @@ string personalize_index (void * webserver_request)
   
  
   // Whether to keep the main menu always visible.
-  on_off = styles_logic_off_on_inherit_toggle_text (request->database_config_user ()->getMainMenuAlwaysVisible ());
+  string on_off = styles_logic_off_on_inherit_toggle_text (request->database_config_user ()->getMainMenuAlwaysVisible ());
   view.set_variable ("menuvisible", on_off);
   
   

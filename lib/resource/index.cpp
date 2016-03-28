@@ -58,7 +58,6 @@ string resource_index (void * webserver_request)
   header.setNavigator ();
   header.setStylesheet ();
   if (touch) header.jQueryMobileTouchOn ();
-  header.addBreadCrumb (menu_logic_translate_menu (), menu_logic_translate_text ());
   page = header.run ();
   Assets_View view;
   

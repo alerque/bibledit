@@ -56,7 +56,6 @@ string xrefs_index (void * webserver_request)
   Assets_Header header = Assets_Header (translate("Cross references"), webserver_request);
   header.setNavigator ();
   header.setEditorStylesheet ();
-  header.addBreadCrumb (menu_logic_tools_menu (), menu_logic_tools_text ());
   page = header.run ();
   Assets_View view;
   

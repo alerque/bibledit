@@ -7239,9 +7239,6 @@ msgstr ""
 msgid "Vertical position of the caret in the Bible editors"
 msgstr ""
 
-msgid "Show breadcrumbs"
-msgstr ""
-
 msgid "Desktop menu fade out delay"
 msgstr ""
 
