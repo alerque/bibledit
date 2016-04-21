@@ -196,7 +196,7 @@ function lfs_filter () {
 	done < bigtosmall.txt |
 		pcregrep -v '\.(php|in|h|c)$' |
 		pcregrep -v '^$' > /tmp/stashables.txt
-	git filter-branch --prune-empty --tree-filter '
+	git filter-branch -f --prune-empty --tree-filter '
 		while read file; do
 			test -f ${file} && git lfs track ${file}
 		done < /tmp/stashables.txt
