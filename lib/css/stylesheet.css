@@ -384,8 +384,6 @@ span[contenteditable=true],
 }
 #workspacewrapper {
   padding: 0.5em;
-}
-#topbar:not(:empty) + #workspacewrapper {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
