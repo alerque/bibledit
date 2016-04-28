@@ -121,6 +121,21 @@ function add_core_submodule() {
 	fi
 }
 
+function splice_savannah() {
+	git remote -v | grep -q savannah && git remote rm savannah ||:
+	git remote add savannah ../orig-bibledit-web
+	git fetch savannah
+	git branch savannah-master savannah/savannah/bibledit-web ||:
+	snapshotSHA=$(git log --all --format=%h --grep '^A snapshot of Bibledit-Web was added')
+	preMigrateSHA=$(git log --all --format=%h --grep '^The Bibledit-Web folder has been removed')
+	#preMigrateSHA=$(git log --all --format=%h --grep '^gtk: Updated documentation$')
+	postMigrateSHA=$(git log --format=%h savannah-master --grep '^The web folder was split off')
+	git reset --hard ${preMigrateSHA}^
+	git cherry-pick --strategy=recursive -X theirs ${postMigrateSHA}^..savannah-master
+	git diff HEAD..${snapshotSHA}
+	exit
+}
+
 function add_editor_config() {
 	[[ -f .editorconfig ]] && return ||:
 	cut -c1- > .editorconfig <<-EOF
