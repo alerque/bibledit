@@ -276,6 +276,7 @@ remove_bedata
 popd
 
 init_repo orig-bibledit-web $BASE savannah/bibledit-web
+test -d web/web && trim_to_path web ||:
 normalize_authors
 popd
 
@@ -315,7 +316,8 @@ common_cleanup
 popd
 
 init_repo bibledit-cloud orig-bibledit master
-trim_to_path web
+[[ ! -d web/web ]] || trim_to_path web
+splice_savannah
 common_cleanup
 popd
 
