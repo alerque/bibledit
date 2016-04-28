@@ -250,6 +250,18 @@ function remove_paths() {
 		--index-filter "git rm -rf --cached --ignore-unmatch -- $dirs"
 }
 
+funcion remove_bedata() {
+	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -ge 1 ]] || return
+	git filter-branch -f --tag-name-filter cat --prune-empty \
+		--index-filter '
+			git rm -rf --cached --ignore-unmatch -- shared_dictionary __git_test_writable__ log test_write_access
+			git ls-files |
+				pcregrep "/\d*/data" |
+				cut -d/ -f1 |
+				xargs -iX git rm -rf --cached --ignore-unmatch -- "X"
+	'
+}
+
 function remove_defunct() {
 	git rm -rf -- $@ && commit "Remove defunct $@" ||:
 }
@@ -260,6 +272,7 @@ pushd $TARGET
 init_repo orig-bibledit $BASE master
 normalize_authors
 remove_paths test
+remove_bedata
 popd
 
 init_repo orig-bibledit-web $BASE savannah/bibledit-web
