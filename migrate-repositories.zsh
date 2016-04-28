@@ -122,16 +122,22 @@ function add_core_submodule() {
 }
 
 function splice_savannah() {
+	recentSHA=$(git log --grep '^Fixed: Testing it locally, here, with a repository')
+	[[ -z $recentSHA ]] || return
 	git remote -v | grep -q savannah && git remote rm savannah ||:
 	git remote add savannah ../orig-bibledit-web
 	git fetch savannah
 	git branch savannah-master savannah/savannah/bibledit-web ||:
-	snapshotSHA=$(git log --all --format=%h --grep '^A snapshot of Bibledit-Web was added')
-	preMigrateSHA=$(git log --all --format=%h --grep '^The Bibledit-Web folder has been removed')
-	#preMigrateSHA=$(git log --all --format=%h --grep '^gtk: Updated documentation$')
-	postMigrateSHA=$(git log --format=%h savannah-master --grep '^The web folder was split off')
+	snapshotSHA=$(git log --all --format=%H --grep '^A snapshot of Bibledit-Web was added')
+	preMigrateSHA=$(git log --all --format=%H --grep '^The Bibledit-Web folder has been removed')
+	preMigrateParent=$(git rev-parse ${preMigrateSHA}^)
+	postMigrateSHA=$(git log --format=%H savannah-master --grep '^The web folder was split off')
 	git reset --hard ${preMigrateSHA}^
-	git cherry-pick --strategy=recursive -X theirs ${postMigrateSHA}^..savannah-master
+	git checkout savannah-master
+	echo "${postMigrateSHA} ${preMigrateParent}" > .git/info/grafts
+	git filter-branch ${preMigrateParent}..savannah-master
+	git co master
+	git merge --strategy=recursive -X theirs savannah-master -m "${CI_MSG} Graft in git history from savannah"
 	git diff HEAD..${snapshotSHA}
 	exit
 }
