@@ -123,7 +123,7 @@ function add_core_submodule() {
 
 function splice_savannah() {
 	recentSHA=$(git log --grep '^Fixed: Testing it locally, here, with a repository')
-	[[ -z $recentSHA ]] || return
+	[[ -n $recentSHA ]] && return ||:
 	git remote -v | grep -q savannah && git remote rm savannah ||:
 	git remote add savannah ../orig-bibledit-web
 	git fetch savannah
@@ -184,7 +184,7 @@ function common_cleanup() {
 	show_authors
 	add_editor_config
 	apply_patches
-	git gc --aggressive --prune=now ||:
+	git gc --aggressive --prune=all ||:
 	git fsck
 }
 
@@ -251,7 +251,7 @@ function remove_paths() {
 }
 
 funcion remove_bedata() {
-	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -ge 1 ]] || return
+	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -eq 0 ]] && return ||:
 	git filter-branch -f --tag-name-filter cat --prune-empty \
 		--index-filter '
 			git rm -rf --cached --ignore-unmatch -- shared_dictionary __git_test_writable__ log test_write_access test
