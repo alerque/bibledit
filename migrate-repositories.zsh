@@ -138,8 +138,6 @@ function splice_savannah() {
 	git filter-branch --tag-name-filter cat ${preMigrateParent}..savannah-master
 	git co master
 	git merge --strategy=recursive -X theirs savannah-master -m "${CI_MSG} Graft in git history from savannah"
-	git diff HEAD..${snapshotSHA}
-	exit
 }
 
 function add_editor_config() {
@@ -266,7 +264,7 @@ function remove_defunct() {
 	git rm -rf -- $@ && commit "Remove defunct $@" ||:
 }
 
-#rm -rf $TARGET ; mkdir $TARGET
+#rm -rf $TARGET/*
 pushd $TARGET
 
 init_repo orig-bibledit $BASE master
