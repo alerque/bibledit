@@ -183,6 +183,12 @@ function add_editor_config() {
 	commit .editorconfig "Add project-wide editor configuration"
 }
 
+function push_one() {
+	rootSHA=$(git rev-list --max-parents=0 HEAD)
+	git push -f origin ${rootSHA}:refs/heads/master
+	git branch --set-upstream-to origin/master
+}
+
 function common_cleanup() {
 	update_remote
 	add_core_submodule
@@ -195,6 +201,7 @@ function common_cleanup() {
 	apply_patches
 	git gc --aggressive --prune=all ||:
 	git fsck
+	push_one
 }
 
 function lfs_filter () {
