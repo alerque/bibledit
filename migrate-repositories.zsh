@@ -318,6 +318,11 @@ splice_savannah
 common_cleanup
 popd
 
+init_repo bibledit-gtk orig-bibledit master
+trim_to_path gtk
+common_cleanup
+popd
+
 init_repo bibledit orig-bibledit master
 remove_paths lib osx chromeos ios android windows linux
 remove_paths bibletime bibleworks gtk onlinebible paratext web xiphos
