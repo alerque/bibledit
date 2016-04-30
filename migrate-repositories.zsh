@@ -276,10 +276,10 @@ funcion remove_bedata() {
 					cut -d/ -f1 |
 					xargs -iX git rm -rf --cached --ignore-unmatch -- "X"
 			' master
-	[[ $(git log --format=%h --grep '^Merge git://localhost' | wc -l) -eq 0 ]] ||
+	[[ $(git log --format=%h --grep '^\(Merge git://localhost\|(Re)initialize repository\)' | wc -l) -eq 0 ]] ||
 		git filter-branch -f --tag-name-filter cat \
 			--commit-filter '
-				[[ $(git rev-list --all --grep "^Merge git://localhost" | grep -c "$GIT_COMMIT") -gt 0 ]] && skip_commit "$@" || git commit-tree "$@"
+				[[ $(git rev-list --all --grep "^\(Merge git://localhost\|(Re)initialize repository\)" | grep -c "$GIT_COMMIT") -gt 0 ]] && skip_commit "$@" || git commit-tree "$@"
 			' master &&
 		git filter-branch -f --tag-name-filter cat --prune-empty \
 			--parent-filter '
