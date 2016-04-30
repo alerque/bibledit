@@ -18,7 +18,7 @@ function show_authors() {
 
 function normalize_authors () {
 	show_authors | grep -qi Compaq && \
-		git filter-branch -f --tag-name-filter cat --commit-filter '
+		git filter-branch -f --tag-name-filter cat --prune-empty --commit-filter '
 			if  [[ $GIT_AUTHOR_EMAIL =~ teus* ]] || [[ $GIT_AUTHOR_EMAIL =~ translation* ]]; then
 				GIT_AUTHOR_NAME="Teus Benschop";
 				GIT_AUTHOR_EMAIL="teusjannette@gmail.com";
@@ -146,7 +146,7 @@ function splice_savannah() {
 	git reset --hard ${preMigrateSHA}^
 	git checkout savannah-master
 	echo "${postMigrateSHA} ${preMigrateParent}" > .git/info/grafts
-	git filter-branch --tag-name-filter cat ${preMigrateParent}..savannah-master
+	git filter-branch --tag-name-filter cat --prune-empty ${preMigrateParent}..savannah-master
 	git co master
 	git merge --strategy=recursive -X theirs savannah-master -m "${CI_MSG} Graft in git history from savannah"
 }
