@@ -59,23 +59,34 @@ function commit() {
 }
 
 function update_readme() {
-	grep -q 'This repository houses' README.md && return ||:
 	if [[ ! -f README.md ]]; then
 		find -maxdepth 1 -type f -iname '*readme*' | head -n1 | cut -c3- | read old_readme ||:
 		[[ -f $old_readme ]] && rename_path $old_readme README.md ||:
 	fi
-	[[ -f README.md ]] &&  echo >> README.md || touch README.md
-	cut -c1- >> README.md <<-EOF
-		# Bibledit ${(C)repo/*-} User Interface
-		
-		This repository houses the user interface wrapper for [Bibledit][be].
-		For more details please see the [README][berm] in the main bibledit
-		repository.
+	[[ -f README.md ]] || touch README.md
+	grep -q 'This repository houses' README.md ||
+		cut -c1- >> README.md <<-EOF
 
-		[be]: https://bibledit.org
-		[berm]: https://github.com/bibledit/bibledit
-	EOF
-	commit README.md "Add repository details to README"
+			# Bibledit ${(C)repo/*-} User Interface
+			
+			This repository houses the user interface wrapper for [Bibledit][be].
+			For more details please see the [README][berm] in the main bibledit
+			repository.
+
+			[be]: https://bibledit.org
+			[berm]: https://github.com/bibledit/bibledit
+		EOF
+	commit README.md "Add repository details to README" ||:
+	grep -q 'WARNING! Do not use' README.md ||
+		{	cut -c1- <<- EOF
+				# WARNING! Do not use this repository yet, the migration to separate
+				# repositories is not complete! Please use the canonical monolithic repository
+				# at https://github.com/teusbenschop/bibledit until further notice.
+				
+			EOF
+			cat README.md
+		} | sponge README.md
+	commit README.md "Add temporary warning about repository migration" ||:
 }
 
 function update_license() {
