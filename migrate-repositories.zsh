@@ -18,7 +18,7 @@ function show_authors() {
 
 function normalize_authors () {
 	show_authors | grep -qi Compaq && \
-		git filter-branch -f --commit-filter '
+		git filter-branch -f --tag-name-filter cat --commit-filter '
 			if  [[ $GIT_AUTHOR_EMAIL =~ teus* ]] || [[ $GIT_AUTHOR_EMAIL =~ translation* ]]; then
 				GIT_AUTHOR_NAME="Teus Benschop";
 				GIT_AUTHOR_EMAIL="teusjannette@gmail.com";
@@ -34,7 +34,7 @@ function normalize_authors () {
 			GIT_COMMITTER_NAME="$(git config user.name)";
 			GIT_COMMITTER_EMAIL="$(git config user.email)";
 			git commit-tree "$@";
-		'
+		' ||:
 }
 
 function init_repo() {
@@ -135,7 +135,7 @@ function splice_savannah() {
 	git reset --hard ${preMigrateSHA}^
 	git checkout savannah-master
 	echo "${postMigrateSHA} ${preMigrateParent}" > .git/info/grafts
-	git filter-branch ${preMigrateParent}..savannah-master
+	git filter-branch --tag-name-filter cat ${preMigrateParent}..savannah-master
 	git co master
 	git merge --strategy=recursive -X theirs savannah-master -m "${CI_MSG} Graft in git history from savannah"
 	git diff HEAD..${snapshotSHA}
@@ -217,7 +217,7 @@ function lfs_filter () {
 	done < bigtosmall.txt |
 		pcregrep -v '\.(php|in|h|c)$' |
 		pcregrep -v '^$' > /tmp/stashables.txt
-	git filter-branch -f --prune-empty --tree-filter '
+	git filter-branch -f --tag-name-filter cat --prune-empty --tree-filter '
 		while read file; do
 			test -f ${file} && git lfs track ${file}
 		done < /tmp/stashables.txt
