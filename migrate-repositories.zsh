@@ -266,7 +266,7 @@ function remove_paths() {
 		--index-filter "git rm -rf --cached --ignore-unmatch -- $dirs"
 }
 
-funcion remove_bedata() {
+function remove_bedata() {
 	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -eq 0 ]] ||
 		git filter-branch -f --tag-name-filter cat --prune-empty \
 			--index-filter '
@@ -276,10 +276,10 @@ funcion remove_bedata() {
 					cut -d/ -f1 |
 					xargs -iX git rm -rf --cached --ignore-unmatch -- "X"
 			' master
-	[[ $(git log --format=%h --grep '^\(Merge git://localhost\|(Re)initialize repository\)' | wc -l) -eq 0 ]] ||
+	[[ $(git log --format=%h --grep '^\(Merge git://localhost\|(Re)initialize repository\|Merge branch .master. of https://github.com/teusbenschop/bibledit\)' | wc -l) -eq 0 ]] ||
 		git filter-branch -f --tag-name-filter cat \
 			--commit-filter '
-				[[ $(git rev-list --all --grep "^\(Merge git://localhost\|(Re)initialize repository\)" | grep -c "$GIT_COMMIT") -gt 0 ]] && skip_commit "$@" || git commit-tree "$@"
+				[[ $(git rev-list --all --grep "^\(Merge git://localhost\|(Re)initialize repository\|Merge branch .master. of https://github.com/teusbenschop/bibledit\)" | grep -c "$GIT_COMMIT") -gt 0 ]] && skip_commit "$@" || git commit-tree "$@"
 			' master &&
 		git filter-branch -f --tag-name-filter cat --prune-empty \
 			--parent-filter '
@@ -287,6 +287,26 @@ funcion remove_bedata() {
 					xargs --no-run-if-empty git show-branch --independent |
 					xargs --no-run-if-empty -iX echo -n "-p X "
 			' master
+}
+
+function smash_repeats() {
+	[[ $(git log --format=%s | uniq -c | sort -n | tail -n1 | awk '{print $1}') -eq 0 ]] && return ||:
+	unset VISUAL
+	git rebase --abort ||:
+	mktemp smasher.XXXXXX | read SMASHER
+	cut -c1- > $SMASHER <<- EOF
+		#/usr/bin/env zsh
+		prevsubject=''
+		cat \$1 | grep '^pick' |
+		while read cmd sha subject; do
+			[[ \$subject == \$prevsubject ]] && cmd=fixup
+			echo \$cmd \$sha \$subject
+			prevsubject="\$subject"
+		done | sponge \$1
+	EOF
+	chmod 755 $SMASHER
+	EDITOR=./$SMASHER git rebase -p -i --root
+	rm $SMASHER
 }
 
 function remove_defunct() {
@@ -298,6 +318,7 @@ pushd $TARGET
 
 init_repo orig-bibledit $BASE master
 remove_bedata
+smash_repeats
 normalize_authors
 popd
 
