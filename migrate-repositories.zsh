@@ -267,7 +267,7 @@ function remove_paths() {
 }
 
 function remove_bedata() {
-	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -eq 0 ]] ||
+	[[ $(git log --format=%h --grep '^Write test$' | wc -l) -eq 0 ]] || {
 		git filter-branch -f --tag-name-filter cat --prune-empty \
 			--index-filter '
 				git rm -rf --cached --ignore-unmatch -- shared_dictionary __git_test_writable__ log test_write_access test
@@ -276,17 +276,19 @@ function remove_bedata() {
 					cut -d/ -f1 |
 					xargs -iX git rm -rf --cached --ignore-unmatch -- "X"
 			' master
-	[[ $(git log --format=%h --grep '^\(Merge git://localhost\|(Re)initialize repository\|Merge branch .master. of https://github.com/teusbenschop/bibledit\)' | wc -l) -eq 0 ]] ||
+	}
+	[[ $(git log --format=%h --grep '^\(Merge git://localhost\|(Re)initialize repository\|Merge branch .master. of https://github.com/teusbenschop/bibledit\)' | wc -l) -eq 0 ]] || {
 		git filter-branch -f --tag-name-filter cat \
 			--commit-filter '
 				[[ $(git rev-list --all --grep "^\(Merge git://localhost\|(Re)initialize repository\|Merge branch .master. of https://github.com/teusbenschop/bibledit\)" | grep -c "$GIT_COMMIT") -gt 0 ]] && skip_commit "$@" || git commit-tree "$@"
-			' master &&
+			' master
 		git filter-branch -f --tag-name-filter cat --prune-empty \
 			--parent-filter '
 				sed "s/ -p//g" |
 					xargs --no-run-if-empty git show-branch --independent |
 					xargs --no-run-if-empty -iX echo -n "-p X "
 			' master
+	}
 }
 
 function smash_repeats() {
