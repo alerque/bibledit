@@ -301,9 +301,14 @@ function smash_repeats() {
 		prevsubject=''
 		cat \$1 | grep '^pick' |
 		while read cmd sha subject; do
-			[[ \$subject == \$prevsubject ]] && cmd=fixup
-			echo \$cmd \$sha \$subject
+			[[ \$subject == \$prevsubject ]] && [[ \$subject != "cleanup" ]] && cmd=fixup
 			prevsubject="\$subject"
+			[[ \$subject == "doc update" ]] && [[ \$(git log --pretty=%at -n1 \$sha ) == "1239814158" ]] && continue
+			echo \$cmd \$sha \$subject
+			if [[ \$subject == "move Todo" ]] && [[ \$(git log --pretty=%at -n1 \$sha ) == "1341861510" ]]; then
+				cleansha=\$(git log --pretty='%H %s' | grep ' tablet$' |cut -d' ' -f1)
+				echo "exec git checkout \$cleansha -- web/web/pot/bibledit.pot ; git add web/web/pot/bibledit.pot ; git commit --ammend --no-edit"
+			fi
 		done | sponge \$1
 	EOF
 	chmod 755 $SMASHER
