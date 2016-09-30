@@ -339,7 +339,7 @@ trim_to_path lib
 common_cleanup
 popd
 
-init_repo bibledit-osx orig-bibledit master
+init_repo bibledit-macos orig-bibledit master
 trim_to_path osx
 common_cleanup
 popd
