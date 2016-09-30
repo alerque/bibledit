@@ -151,6 +151,13 @@ function splice_savannah() {
 	git merge --strategy=recursive -X theirs savannah-master -m "${CI_MSG} Graft in git history from savannah"
 }
 
+function splice_windows() {
+
+}
+
+function splice_gtk() {
+}
+
 function add_editor_config() {
 	[[ -f .editorconfig ]] && return ||:
 	cut -c1- > .editorconfig <<-EOF
@@ -361,6 +368,7 @@ popd
 
 init_repo bibledit-windows orig-bibledit master
 trim_to_path windows
+splice_windows
 common_cleanup
 popd
 
@@ -377,6 +385,7 @@ popd
 
 init_repo bibledit-gtk orig-bibledit master
 trim_to_path gtk
+splice_gtk
 common_cleanup
 popd
 
